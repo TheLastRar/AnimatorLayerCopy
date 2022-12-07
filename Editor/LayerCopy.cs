@@ -354,6 +354,10 @@ namespace Air.LayerCopy
             switch (tree.blendType)
             {
                 case BlendTreeType.Direct:
+                    for (int i = 0; i < tree.children.Length; i++)
+                        if (!paramList.Contains(tree.children[i].directBlendParameter))
+                            paramList.Add(tree.children[i].directBlendParameter);
+                    break;
                 case BlendTreeType.Simple1D:
                     if (!paramList.Contains(tree.blendParameter))
                         paramList.Add(tree.blendParameter);

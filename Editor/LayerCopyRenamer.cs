@@ -94,6 +94,16 @@ namespace Air.LayerCopy
 
             if (renamedParameterNames.ContainsKey(blendTree.blendParameterY))
                 blendTree.blendParameterY = renamedParameterNames[blendTree.blendParameterY];
+
+            ChildMotion[] motions = blendTree.children; //returns copy
+
+            for (int i = 0; i < motions.Length; i++)
+            {
+                if (renamedParameterNames.ContainsKey(motions[i].directBlendParameter))
+                    motions[i].directBlendParameter = renamedParameterNames[motions[i].directBlendParameter];
+            }
+
+            blendTree.children = motions;
         }
 
         // Process state machine behaviour callback to be passed in LayerCopy.Copy.
