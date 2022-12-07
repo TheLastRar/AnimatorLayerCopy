@@ -113,23 +113,23 @@ namespace Air.LayerCopy
                     return;
                 }
 
-                //Find Param in dst
-                AnimatorControllerParameter dstParam = null;
-                foreach (AnimatorControllerParameter p in parDstAnimator.parameters)
-                {
-                    if (p.name == paramName)
-                    {
-                        dstParam = p;
-                        break;
-                    }
-                }
-
                 //Preprocess
                 if (parameterPreProcessor != null)
                 {
                     AnimatorControllerParameter processedParam = parameterPreProcessor(srcParam);
                     if (processedParam != null)
                         srcParam = processedParam;
+                }
+
+                //Find Param in dst
+                AnimatorControllerParameter dstParam = null;
+                foreach (AnimatorControllerParameter p in parDstAnimator.parameters)
+                {
+                    if (p.name == srcParam.name)
+                    {
+                        dstParam = p;
+                        break;
+                    }
                 }
 
                 //Check DstParam
@@ -143,15 +143,15 @@ namespace Air.LayerCopy
                         case AnimatorControllerParameterType.Trigger:
                         case AnimatorControllerParameterType.Bool:
                             if (dstParam.defaultBool != srcParam.defaultBool)
-                                Debug.LogWarning($"Paramter \"{paramName}\" has differing default values, using destination value");
+                                Debug.LogWarning($"Paramter \"{srcParam.name}\" has differing default values, using destination value");
                             break;
                         case AnimatorControllerParameterType.Int:
                             if (dstParam.defaultInt != srcParam.defaultInt)
-                                Debug.LogWarning($"Paramter \"{paramName}\" has differing default values, using destination value");
+                                Debug.LogWarning($"Paramter \"{srcParam.name}\" has differing default values, using destination value");
                             break;
                         case AnimatorControllerParameterType.Float:
                             if (dstParam.defaultFloat != srcParam.defaultFloat)
-                                Debug.LogWarning($"Paramter \"{paramName}\" has differing default values, using destination value");
+                                Debug.LogWarning($"Paramter \"{srcParam.name}\" has differing default values, using destination value");
                             break;
                         default:
                             break;
@@ -159,7 +159,7 @@ namespace Air.LayerCopy
                 }
                 else
                 {
-                    Debug.LogError($"Parameter \"{paramName}\" exists in destination animator, but with different type");
+                    Debug.LogError($"Parameter \"{srcParam.name}\" exists in destination animator, but with different type");
                     return;
                 }
             }
