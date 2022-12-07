@@ -83,7 +83,7 @@ namespace Air.LayerCopy
                 if (vrc2cvrGestures)
                 {
                     if (swapGestures)
-                        Debug.LogError("'VRC Gestures To CVR' not supportred with 'Swap Gestures'");
+                        Debug.LogError("'VRC Gestures To CVR' is not supported with 'Swap Gestures'");
                     else
                     {
                         VRC2CVRGestureConverter vrc2cvrConverter = new VRC2CVRGestureConverter();
