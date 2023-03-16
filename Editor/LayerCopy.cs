@@ -109,8 +109,8 @@ namespace Air.LayerCopy
                 }
                 if (srcParam == null)
                 {
-                    Debug.LogError("Used Parameter not found in Source Animator!?!");
-                    return;
+                    Debug.LogWarning($"Used Parameter \"{paramName}\" not found in Source Animator!?!");
+                    continue;
                 }
 
                 //Preprocess
