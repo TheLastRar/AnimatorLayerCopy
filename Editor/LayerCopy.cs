@@ -47,9 +47,9 @@ namespace Air.LayerCopy
             System.Action<AnimatorTransitionBase> removeTransition, System.Action<AnimatorTransitionBase, AnimatorTransitionBase> copyTransition);
 
         /// <summary>
-        /// Method to modify a state machine hehaviour.
+        /// Method to modify a state machine behaviour.
         /// </summary>
-        public delegate void StateMachineBevahiourPostProcessor(StateMachineBehaviour behaviour);
+        public delegate void StateMachineBehaviourPostProcessor(StateMachineBehaviour behaviour);
 
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Air.LayerCopy
             BlendTreePostProcessor blendTreePostProcessor = null,
             AnimationClipPreProcessor animationClipRreProcessor = null,
             TransitionPostProcessor transitionPostProcessor = null,
-            StateMachineBevahiourPostProcessor stateMachineBevahiourPostProcessor = null)
+            StateMachineBehaviourPostProcessor stateMachineBevahiourPostProcessor = null)
         {
             if (parSrcAnimator == null | parDstAnimator == null)
                 return;
@@ -418,7 +418,7 @@ namespace Air.LayerCopy
             BlendTreePostProcessor blendTreePostProcessor,
             AnimationClipPreProcessor animationClipPreProcessor,
             TransitionPostProcessor transitionPostProcessor,
-            StateMachineBevahiourPostProcessor stateMachineBevahiourPostProcessor)
+            StateMachineBehaviourPostProcessor stateMachineBehaviourPostProcessor)
         {
             Dictionary<AnimatorState, AnimatorState> stateMapping = new Dictionary<AnimatorState, AnimatorState>();
             Dictionary<AnimatorStateMachine, AnimatorStateMachine> machineMapping = new Dictionary<AnimatorStateMachine, AnimatorStateMachine>();
@@ -434,8 +434,8 @@ namespace Air.LayerCopy
             {
                 StateMachineBehaviour nBehaviour = dstStateMachine.AddStateMachineBehaviour(oBehaviour.GetType());
                 CopyStateBehaviour(oBehaviour, nBehaviour);
-                if (stateMachineBevahiourPostProcessor != null)
-                    stateMachineBevahiourPostProcessor(nBehaviour);
+                if (stateMachineBehaviourPostProcessor != null)
+                    stateMachineBehaviourPostProcessor(nBehaviour);
             }
 
             //Copy States
@@ -444,7 +444,7 @@ namespace Air.LayerCopy
                 AnimatorState nState = dstStateMachine.AddState(state.state.name, state.position);
                 AnimatorState oState = state.state;
 
-                DeepCopyState(srcStateMachine, dstStateMachine, oState, nState, blendTreePostProcessor, animationClipPreProcessor, stateMachineBevahiourPostProcessor);
+                DeepCopyState(srcStateMachine, dstStateMachine, oState, nState, blendTreePostProcessor, animationClipPreProcessor, stateMachineBehaviourPostProcessor);
 
                 //Check if default state
                 if (srcStateMachine.defaultState == oState)
@@ -463,7 +463,7 @@ namespace Air.LayerCopy
                 AnimatorStateMachine nMachine = dstStateMachine.AddStateMachine(machine.stateMachine.name, machine.position);
                 AnimatorStateMachine oMachine = machine.stateMachine;
 
-                DeepCopy(oMachine, nMachine, statePostProcessor, blendTreePostProcessor, animationClipPreProcessor, transitionPostProcessor, stateMachineBevahiourPostProcessor);
+                DeepCopy(oMachine, nMachine, statePostProcessor, blendTreePostProcessor, animationClipPreProcessor, transitionPostProcessor, stateMachineBehaviourPostProcessor);
 
                 machineMapping.Add(oMachine, nMachine);
             }
@@ -560,7 +560,7 @@ namespace Air.LayerCopy
         static void DeepCopyState(AnimatorStateMachine srcStateMachine, AnimatorStateMachine dstStateMachine, AnimatorState srcState, AnimatorState dstState,
             BlendTreePostProcessor blendTreePostProcessor,
             AnimationClipPreProcessor animationClipPreProcessor,
-            StateMachineBevahiourPostProcessor stateMachineBevahiourPostProcessor)
+            StateMachineBehaviourPostProcessor stateMachineBevahiourPostProcessor)
         {
             foreach (StateMachineBehaviour oBehaviour in srcState.behaviours)
             {

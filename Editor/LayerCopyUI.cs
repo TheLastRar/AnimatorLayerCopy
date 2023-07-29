@@ -106,7 +106,7 @@ namespace Air.LayerCopy
                             return input;
                         }
                         renamer.renameFunction = RenameSwapGestures;
-                        LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers, renamer.PreProcessParameter, renamer.PostprocessState, renamer.PostProcessBlendTree, null, renamer.PostProcessTransitions, renamer.PostProcessStateMachineBevahiour);
+                        LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers, renamer.PreProcessParameter, renamer.PostprocessState, renamer.PostProcessBlendTree, null, renamer.PostProcessTransitions, renamer.PostProcessStateMachineBehaviour);
                     }
                     else
                         LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers);

@@ -108,7 +108,7 @@ namespace Air.LayerCopy
 
         // Process state machine behaviour callback to be passed in LayerCopy.Copy.
         // Updates behaviour parameters to match new parameter names.
-        public void PostProcessStateMachineBevahiour(StateMachineBehaviour behaviour)
+        public void PostProcessStateMachineBehaviour(StateMachineBehaviour behaviour)
         {
             switch (behaviour)
             {
