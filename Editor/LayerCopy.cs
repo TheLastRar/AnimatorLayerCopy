@@ -177,9 +177,11 @@ namespace Air.LayerCopy
             //Copy Params
             foreach (AnimatorControllerParameter param in neededParameters)
             {
-                AnimatorControllerParameter nParam = new AnimatorControllerParameter();
-                nParam.name = param.name;
-                nParam.type = param.type;
+                AnimatorControllerParameter nParam = new AnimatorControllerParameter
+                {
+                    name = param.name,
+                    type = param.type
+                };
 
                 switch (param.type)
                 {
@@ -434,8 +436,7 @@ namespace Air.LayerCopy
             {
                 StateMachineBehaviour nBehaviour = dstStateMachine.AddStateMachineBehaviour(oBehaviour.GetType());
                 CopyStateBehaviour(oBehaviour, nBehaviour);
-                if (stateMachineBehaviourPostProcessor != null)
-                    stateMachineBehaviourPostProcessor(nBehaviour);
+                stateMachineBehaviourPostProcessor?.Invoke(nBehaviour);
             }
 
             //Copy States
@@ -451,8 +452,7 @@ namespace Air.LayerCopy
                     dstStateMachine.defaultState = nState;
 
                 //Post process
-                if (statePostProcessor != null)
-                    statePostProcessor(nState);
+                statePostProcessor?.Invoke(nState);
 
                 stateMapping.Add(oState, nState);
             }
@@ -480,9 +480,8 @@ namespace Air.LayerCopy
                 CopyTransition(oTransition, nTransition);
             }
             //PostProcess
-            if (transitionPostProcessor != null)
-                transitionPostProcessor(dstStateMachine.entryTransitions, dstStateMachine.AddEntryTransition, dstStateMachine.AddEntryTransition, null,
-                    x => dstStateMachine.RemoveEntryTransition((AnimatorTransition)x), (s, d) => CopyTransition((AnimatorTransition)s, (AnimatorTransition)d));
+            transitionPostProcessor?.Invoke(dstStateMachine.entryTransitions, dstStateMachine.AddEntryTransition, dstStateMachine.AddEntryTransition, null,
+                x => dstStateMachine.RemoveEntryTransition((AnimatorTransition)x), (s, d) => CopyTransition((AnimatorTransition)s, (AnimatorTransition)d));
 
 
             //Copy AnyState Transitions
@@ -497,10 +496,8 @@ namespace Air.LayerCopy
                 CopyStateTransition(oTransition, nTransition);
             }
             //PostProcess
-            if (transitionPostProcessor != null)
-                transitionPostProcessor(dstStateMachine.anyStateTransitions, dstStateMachine.AddAnyStateTransition, dstStateMachine.AddAnyStateTransition, null,
-                    x => dstStateMachine.RemoveAnyStateTransition((AnimatorStateTransition)x), (s, d) => CopyStateTransition((AnimatorStateTransition)s, (AnimatorStateTransition)d));
-
+            transitionPostProcessor?.Invoke(dstStateMachine.anyStateTransitions, dstStateMachine.AddAnyStateTransition, dstStateMachine.AddAnyStateTransition, null,
+                x => dstStateMachine.RemoveAnyStateTransition((AnimatorStateTransition)x), (s, d) => CopyStateTransition((AnimatorStateTransition)s, (AnimatorStateTransition)d));
 
             //State Transitions
             foreach (ChildAnimatorState state in srcStateMachine.states)
@@ -523,9 +520,8 @@ namespace Air.LayerCopy
                     CopyStateTransition(oTransition, nTransition);
                 }
                 //PostProcess
-                if (transitionPostProcessor != null)
-                    transitionPostProcessor(nState.transitions, nState.AddTransition, nState.AddTransition, nState.AddExitTransition,
-                        x => nState.RemoveTransition((AnimatorStateTransition)x), (s, d) => CopyStateTransition((AnimatorStateTransition)s, (AnimatorStateTransition)d));
+                transitionPostProcessor?.Invoke(nState.transitions, nState.AddTransition, nState.AddTransition, nState.AddExitTransition,
+                    x => nState.RemoveTransition((AnimatorStateTransition)x), (s, d) => CopyStateTransition((AnimatorStateTransition)s, (AnimatorStateTransition)d));
             }
 
             //StateMachine Transitions
@@ -550,10 +546,9 @@ namespace Air.LayerCopy
                     CopyTransition(oTransition, nTransition);
                 }
                 //PostProcess
-                if (transitionPostProcessor != null)
-                    transitionPostProcessor(dstStateMachine.GetStateMachineTransitions(nMachine),
-                        x => dstStateMachine.AddStateMachineTransition(nMachine, x), x => dstStateMachine.AddStateMachineTransition(nMachine, x), () => dstStateMachine.AddStateMachineExitTransition(nMachine),
-                        x => dstStateMachine.RemoveStateMachineTransition(nMachine, (AnimatorTransition)x), (s, d) => CopyTransition((AnimatorTransition)s, (AnimatorTransition)d));
+                transitionPostProcessor?.Invoke(dstStateMachine.GetStateMachineTransitions(nMachine),
+                    x => dstStateMachine.AddStateMachineTransition(nMachine, x), x => dstStateMachine.AddStateMachineTransition(nMachine, x), () => dstStateMachine.AddStateMachineExitTransition(nMachine),
+                    x => dstStateMachine.RemoveStateMachineTransition(nMachine, (AnimatorTransition)x), (s, d) => CopyTransition((AnimatorTransition)s, (AnimatorTransition)d));
             }
         }
 
@@ -566,8 +561,7 @@ namespace Air.LayerCopy
             {
                 StateMachineBehaviour nBehaviour = dstState.AddStateMachineBehaviour(oBehaviour.GetType());
                 CopyStateBehaviour(oBehaviour, nBehaviour);
-                if (stateMachineBevahiourPostProcessor != null)
-                    stateMachineBevahiourPostProcessor(nBehaviour);
+                stateMachineBevahiourPostProcessor?.Invoke(nBehaviour);
             }
 
             dstState.motion = DeepCopyMotion(srcStateMachine, dstStateMachine, srcState.motion, blendTreePostProcessor, animationClipPreProcessor);
@@ -655,8 +649,7 @@ namespace Air.LayerCopy
                     tree = DeepCopyBlendTree(srcStateMachine, dstStateMachine, tree, blendTreePostProcessor, animationClipPreProcessor);
                 //else tree is input motion
 
-                if (blendTreePostProcessor != null)
-                    blendTreePostProcessor(ref external, ref tree, (x) => DeepCopyBlendTree(srcStateMachine, dstStateMachine, x, blendTreePostProcessor, animationClipPreProcessor));
+                blendTreePostProcessor?.Invoke(ref external, ref tree, (x) => DeepCopyBlendTree(srcStateMachine, dstStateMachine, x, blendTreePostProcessor, animationClipPreProcessor));
 
                 if (!external)
                     AssetDatabase.AddObjectToAsset(tree, dstStateMachine);
@@ -683,10 +676,9 @@ namespace Air.LayerCopy
                 maxThreshold = tree.maxThreshold,
                 minThreshold = tree.minThreshold,
                 useAutomaticThresholds = tree.useAutomaticThresholds,
+                //May meed to be done after save?
+                hideFlags = tree.hideFlags
             };
-
-            //May meed to be done after save?
-            nTree.hideFlags = tree.hideFlags;
 
             ChildMotion[] motions = tree.children; //returns copy
 

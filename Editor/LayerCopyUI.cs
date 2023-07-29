@@ -30,8 +30,10 @@ namespace Air.LayerCopy
 
         void OnGUI()
         {
-            var centeredStyle = new GUIStyle(GUI.skin.GetStyle("Label"));
-            centeredStyle.alignment = TextAnchor.UpperCenter;
+            var centeredStyle = new GUIStyle(GUI.skin.GetStyle("Label"))
+            {
+                alignment = TextAnchor.UpperCenter
+            };
 
             GUILayout.Label("Select Animators", centeredStyle);
             EditorGUILayout.BeginVertical();

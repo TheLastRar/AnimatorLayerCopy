@@ -22,9 +22,11 @@ namespace Air.LayerCopy
             {
                 renamedParameterNames.Add(parameter.name, nName);
 
-                AnimatorControllerParameter nParam = new AnimatorControllerParameter();
-                nParam.name = nName;
-                nParam.type = parameter.type;
+                AnimatorControllerParameter nParam = new AnimatorControllerParameter
+                {
+                    name = nName,
+                    type = parameter.type
+                };
 
                 switch (parameter.type)
                 {
