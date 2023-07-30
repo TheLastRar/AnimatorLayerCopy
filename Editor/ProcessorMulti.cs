@@ -77,6 +77,9 @@ public class ProcessorMulti : CopyProcessor
     // Chaining remappers is not supported
     public override System.Type RemapStateMachineBehaviourType(System.Type type)
     {
+        if (remapper.ContainsKey(type))
+            return remapper[type].RemapStateMachineBehaviourType(type);
+
         foreach (var processor in copyProcessors)
         {
             System.Type ret = processor.RemapStateMachineBehaviourType(type);
