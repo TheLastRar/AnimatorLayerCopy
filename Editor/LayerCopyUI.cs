@@ -50,7 +50,7 @@ namespace Air.LayerCopy
             Dictionary<string, bool> oldSelection = selectedLayers;
             selectedLayers = new Dictionary<string, bool>();
 
-            vrc2cvrGestures = EditorGUILayout.Toggle("VRC Gestures To CVR (WIP)", vrc2cvrGestures);
+            vrc2cvrGestures = EditorGUILayout.Toggle("VRC To CVR (WIP)", vrc2cvrGestures);
             swapGestures = EditorGUILayout.Toggle("Swap Left/Right Gestures", swapGestures);
 
             if (srcAnimator != null)
@@ -85,11 +85,11 @@ namespace Air.LayerCopy
                 if (vrc2cvrGestures)
                 {
                     if (swapGestures)
-                        Debug.LogError("'VRC Gestures To CVR' is not supported with 'Swap Gestures'");
+                        Debug.LogError("'VRC To CVR' is not supported with 'Swap Gestures'");
                     else
                     {
-                        VRC2CVRGestureConverter vrc2cvrConverter = new VRC2CVRGestureConverter();
-                        LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers, parameterPreProcessor: vrc2cvrConverter.PreProcessParameter, transitionPostProcessor: vrc2cvrConverter.PostProcessTransitions);
+                        ProcessorMulti vrc2cvr = new ProcessorMulti(new CopyProcessor[] { new VRC2CVRGestureConverter(), new VRC2CVRDriverConverter() });
+                        LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers, vrc2cvr);
                     }
                 }
                 else
@@ -108,7 +108,7 @@ namespace Air.LayerCopy
                             return input;
                         }
                         renamer.renameFunction = RenameSwapGestures;
-                        LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers, renamer.PreProcessParameter, renamer.PostprocessState, renamer.PostProcessBlendTree, null, renamer.PostProcessTransitions, renamer.PostProcessStateMachineBehaviour);
+                        LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers, renamer);
                     }
                     else
                         LayerCopy.Copy(srcAnimator, dstAnimator, selectedLayers);

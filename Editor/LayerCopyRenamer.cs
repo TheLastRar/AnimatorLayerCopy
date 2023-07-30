@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Air.LayerCopy
 {
     // Renames parameters using the function set to renameFunction.
-    public class ParameterRenamer
+    public class ParameterRenamer : CopyProcessor
     {
         // Function used to rename parameters, returns a new names based on an input name.
         public System.Func<string, string> renameFunction;
@@ -15,7 +15,7 @@ namespace Air.LayerCopy
 
         // Process parameter callback to be passed in LayerCopy.Copy.
         // Passes parameter names to renameFunction to perform renaming.
-        public AnimatorControllerParameter PreProcessParameter(in AnimatorControllerParameter parameter)
+        public override AnimatorControllerParameter ParameterPreProcess(in AnimatorControllerParameter parameter)
         {
             string nName = renameFunction(parameter.name);
             if (nName != parameter.name)
@@ -50,7 +50,7 @@ namespace Air.LayerCopy
 
         // Process state callback to be passed in LayerCopy.Copy.
         // Updates state paremeters to match new parameter names.
-        public void PostprocessState(AnimatorState state)
+        public override void StatePostProcess(AnimatorState state)
         {
             if (renamedParameterNames.ContainsKey(state.cycleOffsetParameter))
                 state.cycleOffsetParameter = renamedParameterNames[state.cycleOffsetParameter];
@@ -67,7 +67,7 @@ namespace Air.LayerCopy
 
         // Process transitions callback to be passed in LayerCopy.Copy.
         // Updates transitions to match new parameter names.
-        public void PostProcessTransitions(AnimatorTransitionBase[] transitions,
+        public override void TransitionPostProcess(AnimatorTransitionBase[] transitions,
             System.Func<AnimatorState, AnimatorTransitionBase> addTransitionToState, System.Func<AnimatorStateMachine, AnimatorTransitionBase> addTransitionToMachine,
             System.Func<AnimatorTransitionBase> addTransitionToExit, System.Action<AnimatorTransitionBase> removeTransition, System.Action<AnimatorTransitionBase, AnimatorTransitionBase> copyTransition)
         {
@@ -86,7 +86,7 @@ namespace Air.LayerCopy
 
         // Process blend tree callback to be passed in LayerCopy.Copy.
         // Updates blend tree parameters to match new parameter names.
-        public void PostProcessBlendTree(ref bool externalAsset, ref BlendTree blendTree, System.Action<BlendTree> prepareExternalForEmbed)
+        public override void BlendTreePostProcess(ref bool externalAsset, ref BlendTree blendTree, System.Action<BlendTree> prepareExternalForEmbed)
         {
             if (externalAsset)
                 throw new System.NotImplementedException("Modifications to external blendtree required copying the asset file");
@@ -110,7 +110,7 @@ namespace Air.LayerCopy
 
         // Process state machine behaviour callback to be passed in LayerCopy.Copy.
         // Updates behaviour parameters to match new parameter names.
-        public void PostProcessStateMachineBehaviour(StateMachineBehaviour behaviour)
+        public override void StateMachineBehaviourPostProcess(StateMachineBehaviour behaviour)
         {
             switch (behaviour)
             {

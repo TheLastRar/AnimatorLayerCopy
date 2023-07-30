@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Air.LayerCopy
 {
-    public class VRC2CVRGestureConverter
+    public class VRC2CVRGestureConverter : CopyProcessor
     {
         private struct Range
         {
@@ -23,7 +23,7 @@ namespace Air.LayerCopy
 
         // Process parameter callback to be passed in LayerCopy.Copy.
         // Validates that existing Gesture* parameters are int, then changes the type to float
-        public AnimatorControllerParameter PreProcessParameter(in AnimatorControllerParameter parameter)
+        public override AnimatorControllerParameter ParameterPreProcess(in AnimatorControllerParameter parameter)
         {
             if (parameter.name == "GestureLeft" || parameter.name == "GestureRight")
             {
@@ -36,7 +36,7 @@ namespace Air.LayerCopy
 
         // Process parameter callback to be passed in LayerCopy.Copy.
         // Converts transitions to use float comparisons, along with remapping values to match CVR
-        public void PostProcessTransitions(AnimatorTransitionBase[] transitions,
+        public override void TransitionPostProcess(AnimatorTransitionBase[] transitions,
             System.Func<AnimatorState, AnimatorTransitionBase> addTransitionToState, System.Func<AnimatorStateMachine, AnimatorTransitionBase> addTransitionToMachine,
             System.Func<AnimatorTransitionBase> addTransitionToExit, System.Action<AnimatorTransitionBase> removeTransition, System.Action<AnimatorTransitionBase, AnimatorTransitionBase> copyTransition)
         {
